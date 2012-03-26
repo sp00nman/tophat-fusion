@@ -1,0 +1,23 @@
+alphabet.o: alphabet.c \
+ /fs/szdevel/core-cbcb-software/Linux-x86_64/packages/gcc-4.5.2/lib/gcc/x86_64-redhat-linux/4.5.2/include/stdint.h \
+ /usr/include/stdint.h \
+ /fs/szdevel/core-cbcb-software/Linux-x86_64/packages/gcc-4.5.2/lib/gcc/x86_64-redhat-linux/4.5.2/include-fixed/features.h \
+ /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
+ /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h \
+ /usr/include/bits/wchar.h
+
+/fs/szdevel/core-cbcb-software/Linux-x86_64/packages/gcc-4.5.2/lib/gcc/x86_64-redhat-linux/4.5.2/include/stdint.h:
+
+/usr/include/stdint.h:
+
+/fs/szdevel/core-cbcb-software/Linux-x86_64/packages/gcc-4.5.2/lib/gcc/x86_64-redhat-linux/4.5.2/include-fixed/features.h:
+
+/usr/include/sys/cdefs.h:
+
+/usr/include/bits/wordsize.h:
+
+/usr/include/gnu/stubs.h:
+
+/usr/include/gnu/stubs-64.h:
+
+/usr/include/bits/wchar.h:
