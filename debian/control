@@ -1,0 +1,12 @@
+Source: tophat-fusion0.1.0
+Section: science
+Priority: optional
+Maintainer: tophat.cufflinks@gmail.com
+Build-Depends: debhelper (>= 7), g++, libbam-dev, zlib1g-dev, libncurses-dev
+Standards-Version: 3.9.2
+Homepage: http://tophat-fusion.sourceforge.net/
+
+Package: tophat-fusion0.1.0
+Architecture: amd64
+Depends: libncurses-dev, libbam-dev, zlib1g-dev
+Description: TopHat-Fusion is an enhanced version of TopHat with the ability to align reads across fusion points, which results from the breakage and re-joining of two different chromosomes, or from rearrangements within a chromosome. 
