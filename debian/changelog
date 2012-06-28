@@ -1,3 +1,9 @@
+tophat-fusion0.1.0 (0.1.0-2) lucid; urgency=low
+
+  * cleaned up rules and fixed /usr/bin/*
+
+ -- Nathaniel Nutter <nnutter@genome.wustl.edu>  Thu, 28 Jun 2012 13:57:09 -0500
+
 tophat-fusion0.1.0 (0.1.0) unstable; urgency=low
 
   * Made a debian package
