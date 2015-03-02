@@ -103,7 +103,7 @@ class TopHatFusionParams:
                 sys.exit(0)
             if option in ("-h", "--help"):
                 raise Usage(use_message)
-            if option in ("-o", "output-dir"):
+            if option in ("-o", "--output-dir"):
                 self.output_dir = str(value)
             if option == "--num-fusion-reads":
                 self.num_fusion_reads = int(value)
@@ -1876,7 +1876,7 @@ if __name__ == "__main__":
         params.check()
 
         bwt_idx_prefix = args[0]
-        output_dir = params.output_dir
+        output_dir = params.output_dir + "/"
         logging_dir = output_dir + "logs/"
         tmp_dir = output_dir + "tmp/"
 
