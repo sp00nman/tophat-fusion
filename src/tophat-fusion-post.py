@@ -718,10 +718,10 @@ def do_blast(params):
                 if os.path.exists(file_name):
                     return
 
-        # exchanged old blast with blast 2.2.29, build Sep 17 2014 04:09:29
-        # blast_cmd = "echo %s | blastall -p blastn -d %s -e 1e-10 -W 28"
-        blast_cmd = "echo %s | blastn -db %s -evalue 1e-10 -word_size 28"
-        output = os.popen(blast_cmd % (seq, database)).read()
+                # exchanged old blast with blast 2.2.29, build Sep 17 2014 04:09:29
+                # blast_cmd = "echo %s | blastall -p blastn -d %s -e 1e-10 -W 28"
+                blast_cmd = "echo %s | blastn -db %s -evalue 1e-10 -word_size 28"
+                output = os.popen(blast_cmd % (seq, database)).read()
 
                 if str.find(output, "No hits found") != -1:
                     # exchanged old blast with blast 2.2.29, build Sep 17 2014 04:09:29
