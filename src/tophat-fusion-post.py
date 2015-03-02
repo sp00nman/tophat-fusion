@@ -8,9 +8,13 @@ Created by Daehwan Kim on 2011-05-05.
 Copyright (c) 2011 Daehwan Kim. All rights reserved.
 """
 
-import sys, getopt, warnings
-import os, subprocess, errno
-import string, re
+import sys
+import getopt
+import warnings
+import os
+import subprocess
+import string
+import re
 from datetime import datetime, date, time
 import math
 from sets import Set
@@ -46,15 +50,12 @@ class Usage(Exception):
     def __init__(self, msg):
         self.msg = msg
 
-        
-output_dir = "./tophatfusion_out/"
-logging_dir = output_dir + "logs/"
-tmp_dir = output_dir + "tmp/"
-
 
 class TopHatFusionParams:
     def __init__(self,
-                 keep_tmp = ""):
+                 keep_tmp=""):
+
+        self.output_dir = "./tophatfusion_out/"
         self.keep_tmp = keep_tmp
 
         self.num_fusion_reads = 3
@@ -102,6 +103,8 @@ class TopHatFusionParams:
                 sys.exit(0)
             if option in ("-h", "--help"):
                 raise Usage(use_message)
+            if option in ("-o", "output-dir"):
+                self.output_dir = str(value)
             if option == "--num-fusion-reads":
                 self.num_fusion_reads = int(value)
             if option == "--num-fusion-pairs":
@@ -242,8 +245,10 @@ def map_fusion_kmer(bwt_idx_prefix, params):
 
     if not os.path.exists(fusion_kmer_file_name):
         get_fusion_seq()
-        cmd = ['bowtie', '-p', '8', '-a', '-n', '3', '-m', '100', bwt_idx_prefix, '-f', '%sfusion_seq.fa' % output_dir]
-        subprocess.call(cmd, stdout=open(output_dir + 'fusion_seq.bwtout', 'w'), stderr=open('/dev/null', 'w'))
+        cmd = ['bowtie', '-p', '8', '-a', '-n', '3', '-m', '100',
+               bwt_idx_prefix, '-f', '%sfusion_seq.fa' % output_dir]
+        subprocess.call(cmd, stdout=open(output_dir + 'fusion_seq.bwtout', 'w'),
+                        stderr=open('/dev/null', 'w'))
         convert_bowtie()
 
     
@@ -460,14 +465,16 @@ def filter_fusion(params):
                 if coord_dif > 0 and coord_dif < max_intron_len:
                     continue
 
-            if not left_seq[half_len-kmer_len:half_len] in seq_chr_dic or not right_seq[half_len:half_len+kmer_len] in seq_chr_dic:
+            if not left_seq[half_len-kmer_len:half_len] in seq_chr_dic or \
+                    not right_seq[half_len:half_len+kmer_len] in seq_chr_dic:
                 continue
 
             left_chrs = seq_chr_dic[left_seq[half_len-kmer_len:half_len]]
             right_chrs = seq_chr_dic[right_seq[half_len:half_len+kmer_len]]
 
             if chr1 == chr2:
-                max_intron_len = min(max_intron_len, abs(coord1 - coord2) * 9 / 10)
+                max_intron_len = min(max_intron_len,
+                                     abs(coord1 - coord2) * 9 / 10)
 
             same = False
             for chr_coord in left_chrs:
@@ -493,7 +500,9 @@ def filter_fusion(params):
             def find_gene(chr, coord, one_dir, is_left):
                 result = []
                 for gene_list in [refGene_list, ensGene_list]:
-                    result.append(gene_exists(gene_list, chr, coord, one_dir, is_left))
+                    result.append(gene_exists(gene_list, chr,
+                                              coord, one_dir,
+                                              is_left))
 
                 if result[0][0] == "N/A":
                     return result[1] + [result[1][0]]
@@ -679,7 +688,7 @@ def do_blast(params):
     blast_nt = output_dir + "blast_nt"
 
     if not os.path.exists(blast_genomic):
-        os.system("mkdir %s" % blast_genomic);
+        os.system("mkdir %s" % blast_genomic)
 
     if not os.path.exists(blast_nt):
         os.system("mkdir %s" % blast_nt)
@@ -708,16 +717,16 @@ def do_blast(params):
                 file_name = "%s/%s" % (outdir, seq)
                 if os.path.exists(file_name):
                     return
-		
-		# exchanged old blast with blast 2.2.29, build Sep 17 2014 04:09:29
-		# blast_cmd = "echo %s | blastall -p blastn -d %s -e 1e-10 -W 28"
-		blast_cmd = "echo %s | blastn -db %s -evalue 1e-10 -word_size 28"
-                output = os.popen(blast_cmd % (seq, database)).read()
+
+        # exchanged old blast with blast 2.2.29, build Sep 17 2014 04:09:29
+        # blast_cmd = "echo %s | blastall -p blastn -d %s -e 1e-10 -W 28"
+        blast_cmd = "echo %s | blastn -db %s -evalue 1e-10 -word_size 28"
+        output = os.popen(blast_cmd % (seq, database)).read()
 
                 if str.find(output, "No hits found") != -1:
-		    # exchanged old blast with blast 2.2.29, build Sep 17 2014 04:09:29
-		    #blast_cmd = "echo %s | blastall -p blastn -d %s -e 1e-5"
-		    blast_cmd = "echo %s | blastn -db %s -evalue 1e-5"
+                    # exchanged old blast with blast 2.2.29, build Sep 17 2014 04:09:29
+                    # #blast_cmd = "echo %s | blastall -p blastn -d %s -e 1e-5"
+                    blast_cmd = "echo %s | blastn -db %s -evalue 1e-5"
                     output = os.popen(blast_cmd % (seq, database)).read()
                 
                 pos1 = str.find(output, ">ref|")
@@ -963,7 +972,7 @@ def read_dist(params):
             for read in reads:
                 seq_pos = 0
                 read_id, chr1, chr2, before, left_pos, right_pos, cigars, seq, qual, mismatch, left = read[:-1]
-                if (left and left_readid_dic[read_id] > params.fusion_multireads) or\
+                if (left and left_readid_dic[read_id] > params.fusion_multireads) or \
                         (not left and right_readid_dic[read_id] > params.fusion_multireads):
                     continue
 
@@ -1794,10 +1803,10 @@ def generate_html(params):
 # Format a DateTime as a pretty string.  
 # FIXME: Currently doesn't support days!
 def formatTD(td):
-  hours = td.seconds // 3600
-  minutes = (td.seconds % 3600) // 60
-  seconds = td.seconds % 60
-  return '%02d:%02d:%02d' % (hours, minutes, seconds) 
+    hours = td.seconds // 3600
+    minutes = (td.seconds % 3600) // 60
+    seconds = td.seconds % 60
+    return '%02d:%02d:%02d' % (hours, minutes, seconds)
 
 
 # Generate a new temporary filename in the user's tmp directory
@@ -1815,10 +1824,12 @@ def die(msg=None):
     print >> sys.stderr, msg
     sys.exit(1)
 
-    
-# rough equivalent of the 'which' command to find external programs
-# (current script path is tested first, then PATH envvar)
-def which(program):
+
+def which(bin_dir, program):
+    """
+    rough equivalent of the 'which' command to find external programs
+    (current script path is tested first, then PATH envvar)
+    """
     def is_executable(fpath):
         return os.path.exists(fpath) and os.access(fpath, os.X_OK)
     fpath, fname = os.path.split(program)
@@ -1837,34 +1848,37 @@ def which(program):
 
 
 def die(msg=None):
- if msg is not None: 
-    print >> sys.stderr, msg
-    sys.exit(1)
+    if msg is not None:
+        print >> sys.stderr, msg
+        sys.exit(1)
 
     
-def prog_path(program):
-    progpath=which(program)
+def prog_path(bin_dir, program):
+    progpath=which(bin_dir, program)
     if progpath == None:
         die("Error locating program: "+program)
     return progpath
 
 
 def get_version():
-   return "0.1.0 (Beta)"
+    return "0.1.0 (Beta)"
 
 
-def main(argv=None):
+if __name__ == "__main__":
+
     warnings.filterwarnings("ignore", "tmpnam is a potential security risk")
     
     # Initialize default parameter values
     params = TopHatFusionParams()
     try:
-        if argv is None:
-            argv = sys.argv
-            args = params.parse_options(argv)
-            params.check()
+        argv = sys.argv
+        args = params.parse_options(argv)
+        params.check()
 
         bwt_idx_prefix = args[0]
+        output_dir = params.output_dir
+        logging_dir = output_dir + "logs/"
+        tmp_dir = output_dir + "tmp/"
 
         print >> sys.stderr, "[%s] Beginning TopHat-Fusion post-processing run (v%s)" % (right_now(), get_version())
         print >> sys.stderr, "-----------------------------------------------" 
@@ -1901,8 +1915,6 @@ def main(argv=None):
     except Usage, err:
         print >> sys.stderr, sys.argv[0].split("/")[-1] + ": " + str(err.msg)
         print >> sys.stderr, "\tfor detailed help see http://tophat-fusion.sourceforge.net/manual.html"
-        return 2
 
 
-if __name__ == "__main__":
-    sys.exit(main())
+
